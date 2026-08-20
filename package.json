@@ -1,0 +1,25 @@
+{
+  "name": "delivery-bot",
+  "version": "1.0.0",
+  "description": "DeliveryBot é um projeto desenvolvido para a aula de **Desenvolvimento Web Mobile IV**, com foco no gerenciamento de pedidos de restaurante e validação de entregas pelo CEP usando a API ViaCEP.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeriveltoSobanski/Delivery-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HeriveltoSobanski/Delivery-Bot/issues"
+  },
+  "homepage": "https://github.com/HeriveltoSobanski/Delivery-Bot#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "node-fetch": "^2.7.0"
+  }
+}

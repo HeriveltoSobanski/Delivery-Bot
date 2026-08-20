@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>DeliveryBot - Validação de CEP</title>
+<style>
+  body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
+  input { padding: 8px; width: 200px; }
+  button { padding: 8px 12px; }
+  #resultado { margin-top: 16px; }
+  .erro { color: red; }
+</style>
+</head>
+<body>
+  <h1>Consultar CEP</h1>
+  <input id="cepInput" placeholder="00000-000" maxlength="9">
+  <button id="buscarBtn">Buscar</button>
+  <div id="resultado"></div>
+
+<script>
+  const cepInput = document.getElementById('cepInput');
+  const resultado = document.getElementById('resultado');
+
+  document.getElementById('buscarBtn').addEventListener('click', buscarCep);
+
+  async function buscarCep() {
+    const cep = cepInput.value.replace(/\D/g, '');
+    resultado.innerHTML = 'Buscando...';
+
+    try {
+      const res = await fetch(`/api/cep/${cep}`);
+      const data = await res.json();
+
+      if (data.erro) {
+        resultado.innerHTML = `<p class="erro">${data.mensagem}</p>`;
+        return;
+      }
+
+      resultado.innerHTML = `
+        <p><strong>Logradouro:</strong> ${data.logradouro}</p>
+        <p><strong>Bairro:</strong> ${data.bairro}</p>
+        <p><strong>Cidade:</strong> ${data.cidade} - ${data.uf}</p>
+      `;
+    } catch (err) {
+      resultado.innerHTML = '<p class="erro">Erro ao buscar CEP</p>';
+    }
+  }
+</script>
+</body>
+</html>
