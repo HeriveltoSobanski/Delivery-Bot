@@ -1,5 +1,6 @@
 node_modules/
 .env
+.env.test
 
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central
