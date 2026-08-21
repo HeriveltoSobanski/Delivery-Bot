@@ -15,14 +15,14 @@ Restaurantes confirmam pedidos manualmente, um a um. O sistema permite:
 
 | Tabela          | Descrição                                                  |
 | --------------- | ----------------------------------------------------------- |
-| `clientes`      | Nome, telefone, CEP e endereço do cliente                   |
+| `clientes`      | Nome, telefone, CEP, endereço, `discord_user_id` (vínculo) e `codigo_vinculo` (opt-in pendente) |
 | `produtos`      | Itens do cardápio (nome, descrição, preço, disponibilidade) |
 | `pedidos`       | Pedido de um cliente, com status e tempo estimado            |
 | `itens_pedido`  | Produtos e quantidades de cada pedido                        |
 | `fila_preparo`  | Fila de preparo da cozinha (posição e status)                 |
-| `mensagens`     | Histórico de mensagens enviadas ao cliente sobre o pedido    |
+| `mensagens`     | Histórico de mensagens enviadas/recebidas (`direcao`) com status de envio (`status_envio`: `enfileirada`/`enviada`/`falha`/`respondida`) |
 
-Schema completo em [db/schema.sql](db/schema.sql).
+Schema versionado em [migrations/](migrations/) (aplicado com `node-pg-migrate`).
 
 Fluxo de status do pedido: `recebido` → `confirmado` → `em_preparo` → `saiu_para_entrega` → `entregue`.
 
@@ -56,12 +56,18 @@ Variáveis:
 | `PGUSER`        | Usuário do Postgres                                                     |
 | `PGPASSWORD`    | Senha do Postgres                                                       |
 | `PGDATABASE`    | Nome do banco (crie-o antes: `createdb delivery_bot`)                   |
+| `DATABASE_URL`  | String de conexão usada pelo `node-pg-migrate` (`postgresql://usuario:senha@host:porta/banco`) |
 | `DELIVERY_UFS`  | UFs aceitas na área de entrega, separadas por vírgula (ex: `SP,PR`). Vazio aceita qualquer CEP válido. |
 
-### 4. Criar as tabelas
+### 4. Aplicar as migrations
 
 ```
 npm run migrate
+```
+
+As migrations ficam em [migrations/](migrations/), numeradas e versionadas (uma por mudança de schema). Para criar uma nova:
+```
+npm run migrate:create nome-da-migration
 ```
 
 ### 5. Rodar o servidor
@@ -153,7 +159,7 @@ createdb delivery_bot_test
 ```
 cp .env.test.example .env.test
 ```
-Preencha com as mesmas credenciais do seu Postgres local (só o `PGDATABASE` muda para `delivery_bot_test`).
+Preencha com as mesmas credenciais do seu Postgres local (só o `PGDATABASE`/`DATABASE_URL` mudam para `delivery_bot_test`).
 
 ### 3. Rodar os testes
 
@@ -161,7 +167,7 @@ Preencha com as mesmas credenciais do seu Postgres local (só o `PGDATABASE` mud
 npm test
 ```
 
-Isso aplica o schema no banco de teste automaticamente (`pretest`) e roda os testes, que cobrem:
+Isso aplica as migrations no banco de teste automaticamente (`pretest`) e roda os testes, que cobrem:
 - CRUD de produtos (`test/produtos.test.js`)
 - Fluxo completo de pedido: criação, validação de itens, confirmação, fila de preparo e "saiu para entrega" (`test/pedidos.test.js`)
 - Validação de CEP e área de entrega (`test/viacep.test.js`)

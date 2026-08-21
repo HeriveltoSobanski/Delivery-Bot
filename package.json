@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "migrate": "node db/migrate.js",
-    "migrate:test": "cross-env NODE_ENV=test node db/migrate.js",
+    "migrate": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "migrate:create": "node-pg-migrate create -j sql",
+    "migrate:test": "node-pg-migrate up --envPath .env.test",
     "pretest": "npm run migrate:test",
     "test": "cross-env NODE_ENV=test jest --runInBand"
   },
@@ -30,6 +32,7 @@
   "devDependencies": {
     "cross-env": "^10.1.0",
     "jest": "^30.4.2",
+    "node-pg-migrate": "^9.0.0",
     "supertest": "^7.2.2"
   }
 }
