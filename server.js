@@ -3,6 +3,7 @@ const path = require('path');
 const produtosRouter = require('./routes/produtos');
 const clientesRouter = require('./routes/clientes');
 const pedidosRouter = require('./routes/pedidos');
+const filaPreparoRouter = require('./routes/filaPreparo');
 const { buscarEnderecoPorCep } = require('./utils/viacep');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/produtos', produtosRouter);
 app.use('/api/clientes', clientesRouter);
 app.use('/api/pedidos', pedidosRouter);
+app.use('/api/fila-preparo', filaPreparoRouter);
 
 app.get('/api/cep/:cep', async (req, res) => {
   try {
